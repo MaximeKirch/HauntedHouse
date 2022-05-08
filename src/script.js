@@ -36,6 +36,11 @@ const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
 const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
+// Graves textures
+const graveColorTexture = textureLoader.load('/textures/marble/color.jpg')
+const graveRoughnessTexture = textureLoader.load('/textures/marble/roughness.jpg')
+const graveNormalTexture = textureLoader.load('/textures/marble/normalDX.jpg')
+
 // Wall textures
 const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
 const bricksColorAmbientOcclusionTexture = textureLoader.load(
@@ -248,7 +253,13 @@ const graves = new THREE.Group()
 scene.add(graves)
 
 const graveGeometry = new THREE.BoxBufferGeometry(0.6, 0.8, 0.2)
-const graveMaterial = new THREE.MeshStandardMaterial({ color: '#b2b6b1' })
+const graveMaterial = new THREE.MeshStandardMaterial({ 
+    map: graveColorTexture,
+    transparent: true,
+    normalMap: graveNormalTexture,
+    roughness: graveRoughnessTexture
+})
+
 
 for (let i = 0; i < 50; i++) {
   const angle = Math.random() * Math.PI * 2
@@ -266,6 +277,11 @@ for (let i = 0; i < 50; i++) {
   grave.rotation.z = (Math.random() - 0.5) * 0.4
   grave.rotation.y = (Math.random() - 0.5) * 0.4
   grave.castShadow = true
+
+  grave.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(grave.geometry.attributes.uv.array, 2),
+  )
 
   // Add the grave to the scene
   graves.add(grave)
